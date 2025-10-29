@@ -1,98 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>TTA Misdispense Incident Log</title>
-
-  <!-- Favicon: put your bong icon file next to this HTML and name it favicon.png -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
-
-  <style>
-    body { background:#000; color:#fff; font-family:"Poppins",sans-serif; margin:0; padding:0; }
-    header {
-      background:#111; display:flex; align-items:center; justify-content:center; gap:15px;
-      padding:20px; border-bottom:2px solid gold;
-    }
-    header img { height:50px; border-radius:4px; }
-    header h1 { font-size:1.8em; color:gold; margin:0; }
-    .container {
-      max-width:900px; margin:40px auto; padding:20px; background:#111; border-radius:12px; box-shadow:0 0 10px gold;
-    }
-    label { display:block; margin-top:10px; font-weight:bold; color:gold; }
-    input, textarea {
-      width:100%; padding:10px; margin-top:6px; border:1px solid gold; border-radius:8px; background:#222; color:#fff; font-size:1em;
-    }
-    textarea { resize:vertical; min-height:80px; }
-    button {
-      background:gold; color:#000; border:none; border-radius:8px; padding:12px 20px; font-size:1em;
-      font-weight:bold; cursor:pointer; margin-top:15px; transition:0.3s;
-    }
-    button:hover { background:#ffda57; }
-    .row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-    .entry { background:#222; border-left:4px solid gold; padding:15px; margin-bottom:15px; border-radius:8px; }
-    .timestamp { color:#ccc; font-size:0.9em; }
-    .clear-btn { background:crimson; color:#fff; margin-left:10px; }
-    .clear-btn:hover { background:#e11; }
-    .download-btn { background:#0077ff; color:#fff; margin-left:10px; }
-    .download-btn:hover { background:#3399ff; }
-    .statusbar { margin-top:10px; color:#ccc; font-size:0.9em; }
-    .pill {
-      display:inline-block; padding:4px 10px; border-radius:999px; font-size:0.8em; margin-left:8px;
-      background:#333; color:#ddd; border:1px solid #444;
-    }
-    .pill.ok { border-color:#1f8b1f; color:#a8e6a8; }
-    .pill.warn { border-color:#a87b00; color:#ffd56a; }
-  </style>
-
-  <!-- Firebase SDKs — using compat builds for simple drop-in usage -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TTA Misdispense Incident Log</title>
+<style>
+  body {
+    background-color: #000;
+    color: #fff;
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    background-color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+    border-bottom: 2px solid gold;
+  }
+  header img {
+    height: 50px;
+    border-radius: 4px;
+  }
+  header h1 {
+    font-size: 1.8em;
+    color: gold;
+    margin: 0;
+  }
+  .container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #111;
+    border-radius: 12px;
+    box-shadow: 0 0 10px gold;
+  }
+  label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+    color: gold;
+  }
+  input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border: 1px solid gold;
+    border-radius: 8px;
+    background-color: #222;
+    color: #fff;
+    font-size: 1em;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  button {
+    background-color: gold;
+    color: black;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: 0.3s;
+  }
+  button:hover {
+    background-color: #ffda57;
+  }
+  .entry {
+    background-color: #222;
+    border-left: 4px solid gold;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+  }
+  .timestamp {
+    color: #ccc;
+    font-size: 0.9em;
+  }
+  .clear-btn {
+    background-color: crimson;
+    color: white;
+    margin-top: 20px;
+  }
+  .clear-btn:hover {
+    background-color: red;
+  }
+  .download-btn {
+    background-color: #0077ff;
+    color: white;
+    margin-top: 10px;
+  }
+  .download-btn:hover {
+    background-color: #3399ff;
+  }
+</style>
 </head>
 <body>
 
 <header>
-  <!-- Put this logo file next to your HTML: TheTravelAgency_SingleLine_Red+Cream (2).png -->
-  <img src="TheTravelAgency_SingleLine_Red+Cream (2).png" alt="TTA Logo"/>
+  <img src="TheTravelAgency_SingleLine_Red+Cream (2).png" alt="TTA Logo">
   <h1>The Travel Agency — Misdispense Incident Log</h1>
 </header>
 
 <div class="container">
   <form id="incidentForm">
-    <div class="row">
-      <div>
-        <label for="incidentDate">Date of Incident</label>
-        <input type="date" id="incidentDate" required>
-      </div>
-      <div>
-        <label for="incidentTime">Time of Incident</label>
-        <input type="time" id="incidentTime" required>
-      </div>
-    </div>
+    <label for="incidentDate">Date of Incident:</label>
+    <input type="date" id="incidentDate" required>
 
-    <div class="row">
-      <div>
-        <label for="register">Register #</label>
-        <input type="text" id="register" placeholder="e.g. Register 2" required>
-      </div>
-      <div>
-        <label for="product">Product Misdispensed</label>
-        <input type="text" id="product" placeholder="Product Name / SKU" required>
-      </div>
-    </div>
+    <label for="incidentTime">Time of Incident:</label>
+    <input type="time" id="incidentTime" required>
 
-    <div class="row">
-      <div>
-        <label for="budtender">Budtender Name</label>
-        <input type="text" id="budtender" placeholder="Budtender Full Name" required>
-      </div>
-      <div>
-        <label for="checker">Checked By</label>
-        <input type="text" id="checker" placeholder="Supervisor/Checker Name" required>
-      </div>
-    </div>
+    <label for="register">Register #:</label>
+    <input type="text" id="register" placeholder="e.g. Register 2" required>
 
-    <label for="notes">Notes / What Happened</label>
+    <label for="budtender">Budtender Name:</label>
+    <input type="text" id="budtender" placeholder="Budtender Full Name" required>
+
+    <label for="checker">Checked By:</label>
+    <input type="text" id="checker" placeholder="Supervisor/Checker Name" required>
+
+    <label for="product">Product Misdispensed:</label>
+    <input type="text" id="product" placeholder="Product Name / SKU" required>
+
+    <label for="notes">Notes / What Happened:</label>
     <textarea id="notes" placeholder="Describe the incident..." required></textarea>
 
     <button type="button" id="generateBtn">Generate Entry</button>
@@ -100,130 +137,20 @@
 
   <hr style="margin:30px 0; border:1px solid gold;">
 
-  <h2 style="color:gold;">📘 Incident Diary
-    <span id="backendStatus" class="pill warn">Local only</span>
-  </h2>
-
+  <h2 style="color:gold;">📘 Incident Diary</h2>
   <div id="incidentLog"></div>
 
-  <div>
-    <button class="download-btn" id="downloadBtn">Download Log (.html)</button>
-    <button class="clear-btn" id="clearBtn">Clear All Entries</button>
-    <div class="statusbar">
-      <span id="lastSaved">Last saved: not yet</span>
-    </div>
-  </div>
+  <button class="download-btn" id="downloadBtn">Download Log (.html)</button>
+  <button class="clear-btn" id="clearBtn">Clear All Entries</button>
 </div>
 
 <script>
-  // ---------- Local Storage Keys ----------
-  const LS_KEY = 'tta_misdispense_entries_v2';
-
-  // ---------- DOM ----------
   const form = document.getElementById('incidentForm');
   const log = document.getElementById('incidentLog');
   const generateBtn = document.getElementById('generateBtn');
   const clearBtn = document.getElementById('clearBtn');
   const downloadBtn = document.getElementById('downloadBtn');
-  const lastSaved = document.getElementById('lastSaved');
-  const backendStatus = document.getElementById('backendStatus');
 
-  // ---------- Firebase Config ----------
-  // Replace the placeholder values below with your Firebase config from the Firebase Console
-  // Project Settings → Your Apps → Web App → "firebaseConfig"
-  const firebaseConfig = {
-    // PASTE YOUR FIREBASE CONFIG HERE, like:
-    // apiKey: "AIzaSy...ABC",
-    // authDomain: "tta-misdispense-log.firebaseapp.com",
-    // databaseURL: "https://tta-misdispense-log-default-rtdb.firebaseio.com",
-    // projectId: "tta-misdispense-log",
-    // storageBucket: "tta-misdispense-log.appspot.com",
-    // messagingSenderId: "1234567890",
-    // appId: "1:1234567890:web:abc123def456"
-  };
-
-  let useFirebase = false;
-  let db = null;
-  let incidentsRef = null;
-
-  try {
-    // If user filled config, initialize Firebase
-    if (firebaseConfig && firebaseConfig.apiKey) {
-      const app = firebase.initializeApp(firebaseConfig);
-      db = firebase.database(app);
-      incidentsRef = db.ref('incidents');
-      useFirebase = true;
-      backendStatus.textContent = 'Cloud sync';
-      backendStatus.classList.remove('warn');
-      backendStatus.classList.add('ok');
-    }
-  } catch (e) {
-    // If init fails, we quietly stay in local mode
-    console.warn('Firebase init failed, using local only', e);
-  }
-
-  // ---------- Render ----------
-  function addEntryToDOM(e, key) {
-    const entry = document.createElement('div');
-    entry.classList.add('entry');
-    entry.innerHTML = `
-      <p><strong>Date of Incident:</strong> ${e.date}</p>
-      <p><strong>Time of Incident:</strong> ${e.time}</p>
-      <p><strong>Register:</strong> ${e.register}</p>
-      <p><strong>Budtender:</strong> ${e.budtender}</p>
-      <p><strong>Checked By:</strong> ${e.checker}</p>
-      <p><strong>Product Misdispensed:</strong> ${e.product}</p>
-      <p><strong>Notes:</strong> ${e.notes}</p>
-      <p class="timestamp"><em>Submitted on ${e.timestamp}</em></p>
-    `;
-    // newest on top
-    log.prepend(entry);
-  }
-
-  function updateLastSaved() {
-    lastSaved.textContent = 'Last saved: ' + new Date().toLocaleString();
-  }
-
-  // ---------- Local Storage ----------
-  function loadFromLocal() {
-    const saved = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
-    saved.forEach(obj => addEntryToDOM(obj));
-  }
-  function saveToLocal(entry) {
-    const saved = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
-    saved.push(entry);
-    localStorage.setItem(LS_KEY, JSON.stringify(saved));
-  }
-  function clearLocal() {
-    localStorage.removeItem(LS_KEY);
-  }
-
-  // ---------- Firebase Sync ----------
-  function bindFirebaseListeners() {
-    if (!useFirebase) return;
-    // For first load, stream all existing and any new ones
-    incidentsRef.on('child_added', (snapshot) => {
-      const data = snapshot.val();
-      addEntryToDOM(data, snapshot.key);
-    });
-  }
-
-  function saveToFirebase(entry) {
-    if (!useFirebase) return;
-    // push creates a unique key
-    incidentsRef.push(entry);
-  }
-
-  // ---------- Load on Startup ----------
-  window.addEventListener('load', () => {
-    if (useFirebase) {
-      bindFirebaseListeners();
-    } else {
-      loadFromLocal();
-    }
-  });
-
-  // ---------- Create Entry ----------
   generateBtn.addEventListener('click', () => {
     const date = document.getElementById('incidentDate').value;
     const time = document.getElementById('incidentTime').value;
@@ -234,64 +161,89 @@
     const notes = document.getElementById('notes').value;
 
     if (!date || !time || !register || !budtender || !checker || !product || !notes) {
-      alert('Please fill out all fields before generating an entry.');
+      alert("Please fill out all fields before generating an entry.");
       return;
     }
 
     const timestamp = new Date().toLocaleString();
-    const entryObj = { date, time, register, budtender, checker, product, notes, timestamp };
 
-    // Display immediately
-    addEntryToDOM(entryObj);
+    const entry = document.createElement('div');
+    entry.classList.add('entry');
+    entry.innerHTML = `
+      <p><strong>Date of Incident:</strong> ${date}</p>
+      <p><strong>Time of Incident:</strong> ${time}</p>
+      <p><strong>Register:</strong> ${register}</p>
+      <p><strong>Budtender:</strong> ${budtender}</p>
+      <p><strong>Checked By:</strong> ${checker}</p>
+      <p><strong>Product Misdispensed:</strong> ${product}</p>
+      <p><strong>Notes:</strong> ${notes}</p>
+      <p class="timestamp"><em>Submitted on ${timestamp}</em></p>
+    `;
+    log.prepend(entry);
 
-    // Save to backend
-    if (useFirebase) {
-      saveToFirebase(entryObj);
-    } else {
-      saveToLocal(entryObj);
-    }
-
-    updateLastSaved();
+    saveEntry({ date, time, register, budtender, checker, product, notes, timestamp });
     form.reset();
   });
 
-  // ---------- Clear All ----------
+  function saveEntry(entry) {
+    const saved = JSON.parse(localStorage.getItem('tta_misdispense_entries') || '[]');
+    saved.push(entry);
+    localStorage.setItem('tta_misdispense_entries', JSON.stringify(saved));
+  }
+
+  function loadEntries() {
+    const saved = JSON.parse(localStorage.getItem('tta_misdispense_entries') || '[]');
+    saved.forEach(e => {
+      const entry = document.createElement('div');
+      entry.classList.add('entry');
+      entry.innerHTML = `
+        <p><strong>Date of Incident:</strong> ${e.date}</p>
+        <p><strong>Time of Incident:</strong> ${e.time}</p>
+        <p><strong>Register:</strong> ${e.register}</p>
+        <p><strong>Budtender:</strong> ${e.budtender}</p>
+        <p><strong>Checked By:</strong> ${e.checker}</p>
+        <p><strong>Product Misdispensed:</strong> ${e.product}</p>
+        <p><strong>Notes:</strong> ${e.notes}</p>
+        <p class="timestamp"><em>Submitted on ${e.timestamp}</em></p>
+      `;
+      log.prepend(entry);
+    });
+  }
+
+  function clearEntries() {
+    localStorage.removeItem('tta_misdispense_entries');
+    log.innerHTML = "";
+  }
+
   clearBtn.addEventListener('click', () => {
-    if (!confirm('Are you sure you want to clear all entries?')) return;
-
-    // Clear UI
-    log.innerHTML = '';
-
-    // Clear storage
-    if (useFirebase) {
-      // For safety, do not nuke cloud data automatically. Comment in if you want a real wipe:
-      // incidentsRef.remove();
-      alert('Cloud sync is on. For safety, this button only clears the on-screen list. Ask me if you want a secure admin wipe action.');
-    } else {
-      clearLocal();
+    if (confirm("Are you sure you want to clear all entries?")) {
+      clearEntries();
     }
   });
 
-  // ---------- Download ----------
   downloadBtn.addEventListener('click', () => {
     if (!log.innerHTML.trim()) {
-      alert('No entries to download yet.');
+      alert("No entries to download yet.");
       return;
     }
+
     const currentDate = new Date().toLocaleString();
     const logoSrc = document.querySelector('header img').src;
     const logContent = `
       <!DOCTYPE html>
-      <html lang="en"><head><meta charset="UTF-8">
-      <title>TTA Misdispense Log — ${currentDate}</title>
-      <style>
-        body { font-family:Poppins, sans-serif; background:#000; color:#fff; padding:20px; }
-        header { display:flex; align-items:center; gap:15px; margin-bottom:20px; }
-        img { height:50px; border-radius:4px; }
-        h1 { color:gold; font-size:1.8em; margin:0; }
-        .entry { background:#111; border-left:4px solid gold; padding:10px; margin-bottom:15px; border-radius:8px; }
-        .timestamp { color:#ccc; font-size:0.9em; }
-      </style></head>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <title>TTA Misdispense Log — ${currentDate}</title>
+        <style>
+          body { font-family: Poppins, sans-serif; background: #000; color: #fff; padding: 20px; }
+          header { display:flex; align-items:center; gap:15px; margin-bottom:20px; }
+          img { height:50px; border-radius:4px; }
+          h1 { color: gold; font-size: 1.8em; margin: 0; }
+          .entry { background: #111; border-left: 4px solid gold; padding: 10px; margin-bottom: 15px; border-radius: 8px; }
+          .timestamp { color: #ccc; font-size: 0.9em; }
+        </style>
+      </head>
       <body>
         <header>
           <img src="${logoSrc}" alt="TTA Logo">
@@ -299,20 +251,25 @@
         </header>
         <p><em>Exported on ${currentDate}</em></p>
         ${log.innerHTML}
-      </body></html>
+      </body>
+      </html>
     `;
-    const blob = new Blob([logContent], { type: 'text/html' });
+    const blob = new Blob([logContent], { type: "text/html" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = `TTA_Misdispense_Log_${new Date().toISOString().split('T')[0]}.html`;
     a.click();
     URL.revokeObjectURL(url);
   });
+
+  loadEntries();
 </script>
 
 </body>
 </html>
+
+
 
 
 
