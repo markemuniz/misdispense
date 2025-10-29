@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TTA Mis-Dispense Incident Log</title>
+<style>
+  body {
+    background-color: #000;
+    color: #fff;
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    background-color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+    border-bottom: 2px solid gold;
+  }
+  header img {
+    height: 50px;
+    border-radius: 4px;
+  }
+  header h1 {
+    font-size: 1.8em;
+    color: gold;
+    margin: 0;
+  }
+  .container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #111;
+    border-radius: 12px;
+    box-shadow: 0 0 10px gold;
+  }
+  label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+    color: gold;
+  }
+  input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border: 1px solid gold;
+    border-radius: 8px;
+    background-color: #222;
+    color: #fff;
+    font-size: 1em;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  button {
+    background-color: gold;
+    color: black;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: 0.3s;
+  }
+  button:hover {
+    background-color: #ffda57;
+  }
+  .entry {
+    background-color: #222;
+    border-left: 4px solid gold;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+  }
+  .timestamp {
+    color: #ccc;
+    font-size: 0.9em;
+  }
+  .clear-btn {
+    background-color: crimson;
+    color: white;
+    margin-top: 20px;
+  }
+  .clear-btn:hover {
+    background-color: red;
+  }
+  .download-btn {
+    background-color: #0077ff;
+    color: white;
+    margin-top: 10px;
+  }
+  .download-btn:hover {
+    background-color: #3399ff;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="TheTravelAgency_SingleLine_Red+Cream (2).png" alt="TTA Logo">
+  <h1>The Travel Agency — Mis-Dispense Incident Log</h1>
+</header>
+
+<div class="container">
+  <form id="incidentForm">
+    <label for="incidentDate">Date of Incident:</label>
+    <input type="date" id="incidentDate" required>
+
+    <label for="incidentTime">Time of Incident:</label>
+    <input type="time" id="incidentTime" required>
+
+    <label for="register">Register #:</label>
+    <input type="text" id="register" placeholder="e.g. Register 2" required>
+
+    <label for="budtender">Budtender Name:</label>
+    <input type="text" id="budtender" placeholder="Budtender Full Name" required>
+
+    <label for="checker">Checked By:</label>
+    <input type="text" id="checker" placeholder="Supervisor/Checker Name" required>
+
+    <label for="product">Product Mis-Dispensed:</label>
+    <input type="text" id="product" placeholder="Product Name / SKU" required>
+
+    <label for="notes">Notes / What Happened:</label>
+    <textarea id="notes" placeholder="Describe the incident..." required></textarea>
+
+    <button type="button" id="generateBtn">Generate Entry</button>
+  </form>
+
+  <hr style="margin:30px 0; border:1px solid gold;">
+
+  <h2 style="color:gold;">📘 Incident Diary</h2>
+  <div id="incidentLog"></div>
+
+  <button class="download-btn" id="downloadBtn">Download Log (.html)</button>
+  <button class="clear-btn" id="clearBtn">Clear All Entries</button>
+</div>
+
+<script>
+  const form = document.getElementById('incidentForm');
+  const log = document.getElementById('incidentLog');
+  const generateBtn = document.getElementById('generateBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+
+  generateBtn.addEventListener('click', () => {
+    const date = document.getElementById('incidentDate').value;
+    const time = document.getElementById('incidentTime').value;
+    const register = document.getElementById('register').value;
+    const budtender = document.getElementById('budtender').value;
+    const checker = document.getElementById('checker').value;
+    const product = document.getElementById('product').value;
+    const notes = document.getElementById('notes').value;
+
+    if (!date || !time || !register || !budtender || !checker || !product || !notes) {
+      alert("Please fill out all fields before generating an entry.");
+      return;
+    }
+
+    const timestamp = new Date().toLocaleString();
+
+    const entry = document.createElement('div');
+    entry.classList.add('entry');
+    entry.innerHTML = `
+      <p><strong>Date of Incident:</strong> ${date}</p>
+      <p><strong>Time of Incident:</strong> ${time}</p>
+      <p><strong>Register:</strong> ${register}</p>
+      <p><strong>Budtender:</strong> ${budtender}</p>
+      <p><strong>Checked By:</strong> ${checker}</p>
+      <p><strong>Product Mis-Dispensed:</strong> ${product}</p>
+      <p><strong>Notes:</strong> ${notes}</p>
+      <p class="timestamp"><em>Submitted on ${timestamp}</em></p>
+    `;
+    log.prepend(entry);
+    form.reset();
+  });
+
+  clearBtn.addEventListener('click', () => {
+    if (confirm("Are you sure you want to clear all entries?")) log.innerHTML = "";
+  });
+
+  downloadBtn.addEventListener('click', () => {
+    if (!log.innerHTML.trim()) {
+      alert("No entries to download yet.");
+      return;
+    }
+
+    const currentDate = new Date().toLocaleString();
+    const logoSrc = document.querySelector('header img').src;
+    const logContent = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <title>TTA Mis-Dispense Log — ${currentDate}</title>
+        <style>
+          body { font-family: Poppins, sans-serif; background: #000; color: #fff; padding: 20px; }
+          header { display:flex; align-items:center; gap:15px; margin-bottom:20px; }
+          img { height:50px; border-radius:4px; }
+          h1 { color: gold; font-size: 1.8em; margin: 0; }
+          .entry { background: #111; border-left: 4px solid gold; padding: 10px; margin-bottom: 15px; border-radius: 8px; }
+          .timestamp { color: #ccc; font-size: 0.9em; }
+        </style>
+      </head>
+      <body>
+        <header>
+          <img src="${logoSrc}" alt="TTA Logo">
+          <h1>The Travel Agency — Mis-Dispense Incident Log</h1>
+        </header>
+        <p><em>Exported on ${currentDate}</em></p>
+        ${log.innerHTML}
+      </body>
+      </html>
+    `;
+    const blob = new Blob([logContent], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `TTA_Mis-Dispense_Log_${new Date().toISOString().split('T')[0]}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+</script>
+
+</body>
+</html>
