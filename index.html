@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TTA Mis-Dispense Incident Log</title>
+<title>TTA Misdispense Incident Log</title>
 <style>
   body {
     background-color: #000;
@@ -106,7 +106,7 @@
 
 <header>
   <img src="TheTravelAgency_SingleLine_Red+Cream (2).png" alt="TTA Logo">
-  <h1>The Travel Agency — Mis-Dispense Incident Log</h1>
+  <h1>The Travel Agency — Misdispense Incident Log</h1>
 </header>
 
 <div class="container">
@@ -126,7 +126,7 @@
     <label for="checker">Checked By:</label>
     <input type="text" id="checker" placeholder="Supervisor/Checker Name" required>
 
-    <label for="product">Product Mis-Dispensed:</label>
+    <label for="product">Product Misdispensed:</label>
     <input type="text" id="product" placeholder="Product Name / SKU" required>
 
     <label for="notes">Notes / What Happened:</label>
@@ -175,7 +175,7 @@
       <p><strong>Register:</strong> ${register}</p>
       <p><strong>Budtender:</strong> ${budtender}</p>
       <p><strong>Checked By:</strong> ${checker}</p>
-      <p><strong>Product Mis-Dispensed:</strong> ${product}</p>
+      <p><strong>Product Misdispensed:</strong> ${product}</p>
       <p><strong>Notes:</strong> ${notes}</p>
       <p class="timestamp"><em>Submitted on ${timestamp}</em></p>
     `;
@@ -200,7 +200,7 @@
       <html lang="en">
       <head>
         <meta charset="UTF-8">
-        <title>TTA Mis-Dispense Log — ${currentDate}</title>
+        <title>TTA Misdispense Log — ${currentDate}</title>
         <style>
           body { font-family: Poppins, sans-serif; background: #000; color: #fff; padding: 20px; }
           header { display:flex; align-items:center; gap:15px; margin-bottom:20px; }
@@ -213,7 +213,7 @@
       <body>
         <header>
           <img src="${logoSrc}" alt="TTA Logo">
-          <h1>The Travel Agency — Mis-Dispense Incident Log</h1>
+          <h1>The Travel Agency — Misdispense Incident Log</h1>
         </header>
         <p><em>Exported on ${currentDate}</em></p>
         ${log.innerHTML}
@@ -224,7 +224,7 @@
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `TTA_Mis-Dispense_Log_${new Date().toISOString().split('T')[0]}.html`;
+    a.download = `TTA_Misdispense_Log_${new Date().toISOString().split('T')[0]}.html`;
     a.click();
     URL.revokeObjectURL(url);
   });
