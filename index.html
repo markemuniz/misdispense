@@ -1,110 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head><link rel="icon" type="image/png" href="favicon.png">
-</head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TTA Misdispense Incident Log</title>
 <style>
-  body {
-    background-color: #000;
-    color: #fff;
-    font-family: "Poppins", sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-  header {
-    background-color: #111;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    padding: 20px;
-    border-bottom: 2px solid gold;
-  }
-  header img {
-    height: 50px;
-    border-radius: 4px;
-  }
-  header h1 {
-    font-size: 1.8em;
-    color: gold;
-    margin: 0;
-  }
-  .container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 20px;
-    background-color: #111;
-    border-radius: 12px;
-    box-shadow: 0 0 10px gold;
-  }
-  label {
-    display: block;
-    margin-top: 10px;
-    font-weight: bold;
-    color: gold;
-  }
-  input, textarea {
-    width: 100%;
-    padding: 10px;
-    margin-top: 6px;
-    border: 1px solid gold;
-    border-radius: 8px;
-    background-color: #222;
-    color: #fff;
-    font-size: 1em;
-  }
-  textarea {
-    resize: vertical;
-    min-height: 80px;
-  }
-  button {
-    background-color: gold;
-    color: black;
-    border: none;
-    border-radius: 8px;
-    padding: 12px 20px;
-    font-size: 1em;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 15px;
-    transition: 0.3s;
-  }
-  button:hover {
-    background-color: #ffda57;
-  }
-  .entry {
-    background-color: #222;
-    border-left: 4px solid gold;
-    padding: 15px;
-    margin-bottom: 15px;
-    border-radius: 8px;
-  }
-  .timestamp {
-    color: #ccc;
-    font-size: 0.9em;
-  }
-  .clear-btn {
-    background-color: crimson;
-    color: white;
-    margin-top: 20px;
-  }
-  .clear-btn:hover {
-    background-color: red;
-  }
-  .download-btn {
-    background-color: #0077ff;
-    color: white;
-    margin-top: 10px;
-  }
-  .download-btn:hover {
-    background-color: #3399ff;
-  }
+  body { background-color:#000; color:#fff; font-family:"Poppins",sans-serif; margin:0; padding:0; }
+  header { background-color:#111; display:flex; align-items:center; justify-content:center; gap:15px; padding:20px; border-bottom:2px solid gold; }
+  header img { height:50px; border-radius:4px; }
+  header h1 { font-size:1.8em; color:gold; margin:0; }
+  .container { max-width:800px; margin:40px auto; padding:20px; background-color:#111; border-radius:12px; box-shadow:0 0 10px gold; }
+  label { display:block; margin-top:10px; font-weight:bold; color:gold; }
+  input, textarea { width:100%; padding:10px; margin-top:6px; border:1px solid gold; border-radius:8px; background-color:#222; color:#fff; font-size:1em; }
+  textarea { resize:vertical; min-height:80px; }
+  button { background-color:gold; color:black; border:none; border-radius:8px; padding:12px 20px; font-size:1em; font-weight:bold; cursor:pointer; margin-top:15px; transition:0.3s; }
+  button:hover { background-color:#ffda57; }
+  .entry { background-color:#222; border-left:4px solid gold; padding:15px; margin-bottom:15px; border-radius:8px; }
+  .timestamp { color:#ccc; font-size:0.9em; }
+  .clear-btn { background-color:crimson; color:white; margin-top:20px; }
+  .clear-btn:hover { background-color:red; }
+  .download-btn { background-color:#0077ff; color:white; margin-top:10px; }
+  .download-btn:hover { background-color:#3399ff; }
+  .status { margin-top:10px; font-size:0.95em; }
 </style>
 </head>
 <body>
-
 <header>
   <img src="TheTravelAgency_SingleLine_Red+Cream (2).png" alt="TTA Logo">
   <h1>The Travel Agency — Misdispense Incident Log</h1>
@@ -114,45 +34,69 @@
   <form id="incidentForm">
     <label for="incidentDate">Date of Incident:</label>
     <input type="date" id="incidentDate" required>
-
     <label for="incidentTime">Time of Incident:</label>
     <input type="time" id="incidentTime" required>
-
     <label for="register">Register #:</label>
     <input type="text" id="register" placeholder="e.g. Register 2" required>
-
     <label for="budtender">Budtender Name:</label>
     <input type="text" id="budtender" placeholder="Budtender Full Name" required>
-
     <label for="checker">Checked By:</label>
     <input type="text" id="checker" placeholder="Supervisor/Checker Name" required>
-
     <label for="product">Product Misdispensed:</label>
     <input type="text" id="product" placeholder="Product Name / SKU" required>
-
     <label for="notes">Notes / What Happened:</label>
     <textarea id="notes" placeholder="Describe the incident..." required></textarea>
 
     <button type="button" id="generateBtn">Generate Entry</button>
+    <div id="status" class="status"></div>
   </form>
 
   <hr style="margin:30px 0; border:1px solid gold;">
-
   <h2 style="color:gold;">📘 Incident Diary</h2>
   <div id="incidentLog"></div>
-
   <button class="download-btn" id="downloadBtn">Download Log (.html)</button>
   <button class="clear-btn" id="clearBtn">Clear All Entries</button>
 </div>
 
 <script>
+  // Web App URL
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhi-WVnp54zwxkfbd_Zq8d_S60SwekdnT4oXxXYDD-ywT2VY_J6npxNPnxKPBhSYh2/exec";
+
   const form = document.getElementById('incidentForm');
   const log = document.getElementById('incidentLog');
   const generateBtn = document.getElementById('generateBtn');
   const clearBtn = document.getElementById('clearBtn');
   const downloadBtn = document.getElementById('downloadBtn');
+  const statusEl = document.getElementById('status');
 
-  generateBtn.addEventListener('click', () => {
+  function setStatus(msg, ok=true) {
+    statusEl.textContent = msg;
+    statusEl.style.color = ok ? 'gold' : '#ff6b6b';
+  }
+
+  // Avoid CORS preflight by using application/x-www-form-urlencoded (simple request).
+  async function sendToSheetFormEncoded(payload) {
+    try {
+      const body = new URLSearchParams(payload); // browser sets proper Content-Type automatically
+      const res = await fetch(SCRIPT_URL, { method: "POST", body });
+      // Apps Script returns JSON via ContentService, but if auth is required you'll get HTML.
+      const text = await res.text();
+      let data = {};
+      try { data = JSON.parse(text); } catch { /* leave as {} */ }
+      if (!data.ok) {
+        setStatus("Saved locally, but failed to save to Google Sheet.", false);
+      } else {
+        setStatus("Saved to Google Sheet.");
+      }
+      return data;
+    } catch (err) {
+      console.error(err);
+      setStatus("Saved locally, but could not reach Google Sheet.", false);
+      return { ok:false, error:String(err) };
+    }
+  }
+
+  generateBtn.addEventListener('click', async () => {
     const date = document.getElementById('incidentDate').value;
     const time = document.getElementById('incidentTime').value;
     const register = document.getElementById('register').value;
@@ -167,6 +111,10 @@
     }
 
     const timestamp = new Date().toLocaleString();
+    const payload = { date, time, register, budtender, checker, product, notes };
+
+    setStatus("Saving...");
+    await sendToSheetFormEncoded(payload);
 
     const entry = document.createElement('div');
     entry.classList.add('entry');
@@ -219,6 +167,7 @@
   clearBtn.addEventListener('click', () => {
     if (confirm("Are you sure you want to clear all entries?")) {
       clearEntries();
+      setStatus("");
     }
   });
 
@@ -227,7 +176,6 @@
       alert("No entries to download yet.");
       return;
     }
-
     const currentDate = new Date().toLocaleString();
     const logoSrc = document.querySelector('header img').src;
     const logContent = `
@@ -266,11 +214,8 @@
 
   loadEntries();
 </script>
-
 </body>
 </html>
-
-
 
 
 
